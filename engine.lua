@@ -1,14 +1,14 @@
 local BATTERY_HEATING_FACTOR = 45
-local BATTERY_HEAT_STEP = 0.000644
-local BATTERY_COOL_STEP = 0.00135
+local BATTERY_HEAT_STEP = 0.0016
+local BATTERY_COOL_STEP = 0.0009
 local BATTERY_TEMP_THRESHOLD = 0.5
 
 local IAS_COOLING_FACTOR = 0.0045
 
 local MOTOR_HEATING_FACTOR = 50
-local MOTOR_HEAT_STEP = 0.00141
-local MOTOR_COOL_STEP = 0.0045
-local MOTOR_TEMP_THRESHOLD = 0.5
+local MOTOR_HEAT_STEP = 0.005
+local MOTOR_COOL_STEP = 0.0065
+local MOTOR_TEMP_THRESHOLD = 0.1
 local MOTOR_MAX_TEMP = 60
 
 local engine = {
@@ -40,6 +40,7 @@ engine.update = function(datarefs)
 
 	------ Battery -----
 	local batteryTemp = datarefs.oat + datarefs.battery_on * datarefs.engineOpen * datarefs.throttle * BATTERY_HEATING_FACTOR
+	local batteryTempDiff = math.abs(batteryTemp - engine.state.temp.battery)
 
 	-- Don't change temp if it's near final temp
 	if (engine.state.temp.battery > batteryTemp - BATTERY_TEMP_THRESHOLD) and (engine.state.temp.battery < batteryTemp + BATTERY_TEMP_THRESHOLD) then
@@ -48,13 +49,14 @@ engine.update = function(datarefs)
 	end
 
 	if (batteryTemp > engine.state.temp.battery) then
-		engine.state.temp.battery = engine.state.temp.battery + (batteryTemp * BATTERY_HEAT_STEP)
+		engine.state.temp.battery = engine.state.temp.battery + (batteryTempDiff * BATTERY_HEAT_STEP)
 	else
-		engine.state.temp.battery = engine.state.temp.battery - (batteryTemp * BATTERY_COOL_STEP)
+		engine.state.temp.battery = engine.state.temp.battery - (batteryTempDiff * BATTERY_COOL_STEP) - datarefs.engineOpen * 0.05
 	end
 
 	------ Motor -----
-	local motorTemp = datarefs.oat + datarefs.battery_on * datarefs.engineOpen * datarefs.throttle * MOTOR_HEATING_FACTOR - (IAS_COOLING_FACTOR * datarefs.ias)
+	local motorTemp = datarefs.oat + datarefs.battery_on * datarefs.throttle * MOTOR_HEATING_FACTOR - (IAS_COOLING_FACTOR * datarefs.ias)
+	local motorTempDiff = math.abs(motorTemp - engine.state.temp.motor)
 
 	-- Don't change temp if it's near final temp
 	if (engine.state.temp.motor > motorTemp - MOTOR_TEMP_THRESHOLD) and (engine.state.temp.motor < motorTemp + MOTOR_TEMP_THRESHOLD) then
@@ -63,9 +65,9 @@ engine.update = function(datarefs)
 	end
 
 	if (motorTemp > engine.state.temp.motor) then
-		engine.state.temp.motor = engine.state.temp.motor + (motorTemp * MOTOR_HEAT_STEP)
+		engine.state.temp.motor = engine.state.temp.motor + (motorTempDiff * MOTOR_HEAT_STEP)
 	else
-		engine.state.temp.motor = engine.state.temp.motor - (motorTemp * MOTOR_COOL_STEP)
+		engine.state.temp.motor = engine.state.temp.motor - (motorTempDiff * MOTOR_COOL_STEP) - datarefs.engineOpen * 0.25
 	end
 
 	-- Top at max temp

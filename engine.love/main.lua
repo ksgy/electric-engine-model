@@ -1,23 +1,37 @@
 local secondElapsed = 0
+local TEST_STATE = 1
 local engine = require("engine")
 
-local testDataRefs = {
-    oat = 20,
-    battery_on = 1,
-    battery_v = 12,
-    battery_a = 5,
-    throttle = 0,
-    engineOpen = 0,
-    ias = 80,
+local STATES = {
+    -- init, engine on
+    {
+        oat = 20,
+        battery_on = 1,
+        battery_v = 12,
+        battery_a = 5,
+        throttle = 1,
+        engineOpen = 1,
+        ias = 80,
+    },
+    -- power off, close engine
+    {
+        oat = 5,
+        battery_on = 1,
+        battery_v = 12,
+        battery_a = 5,
+        throttle = 0,
+        engineOpen = 0,
+        ias = 80,
+    },
 }
 
 function love.load()
-    love.window.setMode(800, 800, {x=0,y=0})
+    love.window.setMode(1600, 800, {x=0,y=0})
     love.graphics.setBackgroundColor(1, 1, 1)
     engine.init({
-        battery = 45,
-        motor = 50,
-        esc = 40
+        battery = 20,
+        motor = 20,
+        esc = 20
     });
 end
 
@@ -35,7 +49,7 @@ function drawTemperature(point)
 
     color = stateColors['motor']
     love.graphics.setColor(color[1], color[2], color[3], 1)
-    love.graphics.line(point.x, 700, point.x, 700 - point.my*2)
+    love.graphics.line(point.x, 600, point.x, 600 - point.my*2)
 end
 
 function love.draw()
@@ -43,8 +57,20 @@ function love.draw()
 
     for i = 1, secondElapsed do
         drawTemperature(graph[i])
-        --print(graph[i].x)
     end
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.print("Time  " .. math.ceil(secondElapsed/60) .. "min", 50, 50)
+    love.graphics.print("oat " .. STATES[TEST_STATE].oat, 50, 70)
+    love.graphics.print("battery_on " .. STATES[TEST_STATE].battery_on, 50, 90)
+    love.graphics.print("battery_v " .. STATES[TEST_STATE].battery_v, 50, 110)
+    love.graphics.print("battery_a " .. STATES[TEST_STATE].battery_a, 50, 130)
+    love.graphics.print("throttle " .. STATES[TEST_STATE].throttle, 50, 150)
+    love.graphics.print("engineOpen " .. STATES[TEST_STATE].engineOpen, 50, 170)
+    love.graphics.print("ias, " .. STATES[TEST_STATE].ias, 50, 190)
+    love.graphics.setColor(stateColors.motor)
+    love.graphics.print("Motor temp  " .. engine.state.temp.motor, 50, 250)
+    love.graphics.setColor(stateColors.battery)
+    love.graphics.print("Battery temp  " .. engine.state.temp.battery, 50, 270)
 end
 
 loaded = false
@@ -52,8 +78,11 @@ loaded = false
 function love.update(dt)
     secondElapsed = secondElapsed + 1
 
-    engine.update(testDataRefs)
+    engine.update(STATES[TEST_STATE])
 
+    if (secondElapsed > 10 * 60) then
+        TEST_STATE = 2
+    end
     graph[secondElapsed] = {
         x = secondElapsed + 1,
         by = engine.state.temp.battery,

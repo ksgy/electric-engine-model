@@ -38,6 +38,28 @@ function update()
 end
 ```
 
+## Customising
+You can customise each graph with the constants found at the beginning of `engine.lua`:
+```lua
+local BATTERY_HEATING_FACTOR = 45 -- basic heating factor
+local BATTERY_HEAT_STEP = 0.0016 -- how fast batter heats
+local BATTERY_COOL_STEP = 0.0009 -- how fast battery cools down
+local BATTERY_TEMP_THRESHOLD = 0.5 
+local IAS_COOLING_FACTOR = 0.0045 -- how much IAS affects the cool down
+
+local MOTOR_HEATING_FACTOR = 50
+local MOTOR_HEAT_STEP = 0.002
+local MOTOR_COOL_STEP = 0.0045
+local MOTOR_TEMP_THRESHOLD = 0.1
+local MOTOR_MAX_TEMP = 50 -- maximum reachable temp (won't overheat above this temp) 
+
+local ESC_HEATING_FACTOR = 50
+local ESC_HEAT_STEP = 0.001
+local ESC_COOL_STEP = 0.008
+local ESC_TEMP_THRESHOLD = 0.1
+local ESC_MAX_TEMP = 40
+```
+
 ## Running test
 You need [LÖVE](https://love2d.org/) to run test:
 ```shell script

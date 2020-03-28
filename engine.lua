@@ -74,7 +74,7 @@ engine.update = function(datarefs)
 		engine.state.temp.motor = engine.state.temp.motor - (motorTempDiff * MOTOR_COOL_STEP) - datarefs.engineOpen * 0.25
 	end
 
-	-- Top at max temp
+	-- Cap at max temp
 	if (engine.state.temp.motor > MOTOR_MAX_TEMP) then engine.state.temp.motor = MOTOR_MAX_TEMP end
 
 	------ Electronic Speed Controller -----
@@ -93,7 +93,7 @@ engine.update = function(datarefs)
 		engine.state.temp.esc = engine.state.temp.esc - (escTempDiff * ESC_COOL_STEP)
 	end
 
-	-- Top at max temp
+	-- Cap at max temp
 	if (engine.state.temp.esc > ESC_MAX_TEMP) then engine.state.temp.esc = ESC_MAX_TEMP end
 
 

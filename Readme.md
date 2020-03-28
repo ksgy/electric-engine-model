@@ -35,3 +35,9 @@ function update()
     end
 end
 ```
+
+## Running test
+You need [LÖVE](https://love2d.org/) to run test:
+```shell script
+love engine.love
+```

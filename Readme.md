@@ -1,5 +1,7 @@
 # Simplified electric-engine model
 
+[Simplified electric-engine model]: https://github.com/ksgy/electric-engine-model/eem.png "Simplified electric-engine model"
+
 ## Usage
 
 Init engine with OAT

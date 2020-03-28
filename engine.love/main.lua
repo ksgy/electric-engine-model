@@ -7,7 +7,7 @@ local STATES = {
     {
         oat = 20,
         battery_on = 1,
-        throttle = 0.2,
+        throttle = 1,
         engineOpen = 1,
         ias = 80,
     },

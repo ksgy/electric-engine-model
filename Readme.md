@@ -1,6 +1,6 @@
 # Simplified electric-engine model
 
-[Simplified electric-engine model]: https://github.com/ksgy/electric-engine-model/blob/master/eem.png "Simplified electric-engine model"
+![Simplified electric-engine model](https://github.com/ksgy/electric-engine-model/blob/master/eem.png)
 
 ## Usage
 

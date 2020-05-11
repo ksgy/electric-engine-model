@@ -75,7 +75,7 @@ engine.update = function(datarefs)
 	end
 
 	-- Cap at max temp
-	if (engine.state.temp.motor > MOTOR_MAX_TEMP) then engine.state.temp.motor = MOTOR_MAX_TEMP end
+	if (engine.state.temp.motor > MOTOR_MAX_TEMP + datarefs.oat) then engine.state.temp.motor = MOTOR_MAX_TEMP + datarefs.oat end
 
 	------ Electronic Speed Controller -----
 	local escTemp = datarefs.oat + datarefs.battery_on * datarefs.throttle * ESC_HEATING_FACTOR
@@ -94,7 +94,7 @@ engine.update = function(datarefs)
 	end
 
 	-- Cap at max temp
-	if (engine.state.temp.esc > ESC_MAX_TEMP) then engine.state.temp.esc = ESC_MAX_TEMP end
+	if (engine.state.temp.esc > ESC_MAX_TEMP + datarefs.oat) then engine.state.temp.esc = ESC_MAX_TEMP + datarefs.oat end
 
 
 end

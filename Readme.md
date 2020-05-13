@@ -1,5 +1,7 @@
 # Simplified electric-engine model
 
+Used in [NHAdrian's ASK21E Experimental model](https://forums.x-plane.org/index.php?/files/file/59851-ask21e-experimental-by-nhadrian/)
+
 ![Simplified electric-engine model](https://github.com/ksgy/electric-engine-model/blob/master/eem.png)
 
 ## Usage

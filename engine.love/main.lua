@@ -29,7 +29,7 @@ function love.load()
     love.window.setMode(1600, 800, {x=0,y=0})
     love.graphics.setBackgroundColor(1, 1, 1)
     engine.init({
-        itt = STATES[1].oat,
+        oat = STATES[1].oat,
     });
     ITT_IMAGE = love.graphics.newImage("itt.png")
     ITT_IMAGE_width = ITT_IMAGE:getWidth()
@@ -67,11 +67,10 @@ function love.draw()
     love.graphics.print("fuel " .. STATES[TEST_STATE].fuel, 50, 130)
     love.graphics.print("starter " .. STATES[TEST_STATE].starter, 50, 150)
     love.graphics.setColor(stateColors.itt)
-    love.graphics.print("ITT    " .. engine.state.temp.itt, 50, 250)
+    love.graphics.print("ITT    " .. engine.temp.itt, 50, 250)
     love.graphics.setColor(stateColors.ng)
-    love.graphics.print("ng    " .. engine.state.ng, 50, 270)
-    --love.graphics.setColor(stateColors.esc)
-    --love.graphics.print("ESC temp  " .. engine.state.temp.esc, 50, 290)
+    love.graphics.print("ng    " .. engine.ng, 50, 270)
+    love.graphics.print("state  " .. engine.states[engine.currentState].name, 50, 290)
 end
 
 loaded = false
@@ -87,8 +86,8 @@ function love.update(dt)
     end
     graph[secondElapsed] = {
         x = secondElapsed + 1,
-        ittY = engine.state.temp.itt,
-        ngY = engine.state.ng,
+        ittY = engine.temp.itt,
+        ngY = engine.ng,
     }
 end
 

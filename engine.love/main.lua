@@ -14,7 +14,16 @@ local STATES = {
         starter = 0,
         ias = 0,
     },
-    -- start engine
+    -- starter on
+    {
+        oat = 20,
+        fuel = 0,
+        battery_on = 1,
+        throttle = 0,
+        starter = 1,
+        ias = 0,
+    },
+    -- apply fuel
     {
         oat = 20,
         fuel = 1,
@@ -44,7 +53,7 @@ stateColors = {
 
 function drawTemperature(point)
     color = stateColors['itt']
-    love.graphics.setColor(color[1], color[2], color[3], 1)
+    love.graphics.setColor(color[1], color[2], color[3], point.state/10)
     love.graphics.line(point.x, 800, point.x, 800 - point.ittY/1.45)
 
     color = stateColors['ng']
@@ -81,13 +90,17 @@ function love.update(dt)
 
     engine.update(STATES[TEST_STATE])
 
-    if (secondElapsed > 2*secondDivider) then
+    if (secondElapsed > 1*secondDivider) then
         TEST_STATE = 2
+    end
+    if (secondElapsed > 2*secondDivider) then
+        TEST_STATE = 3
     end
     graph[secondElapsed] = {
         x = secondElapsed + 1,
         ittY = engine.temp.itt,
         ngY = engine.ng,
+        state = engine.currentState
     }
 end
 

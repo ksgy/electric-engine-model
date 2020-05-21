@@ -69,31 +69,34 @@ function love.draw()
         drawTemperature(graph[i])
     end
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.print("Time " .. math.ceil(secondElapsed/secondDivider) .. "sec", 50, 50)
+    love.graphics.print("Time " .. math.ceil(secondElapsed / secondDivider) .. "sec", 50, 50)
     love.graphics.print("oat " .. STATES[TEST_STATE].oat, 50, 70)
     love.graphics.print("battery_on " .. STATES[TEST_STATE].battery_on, 50, 90)
     love.graphics.print("throttle " .. STATES[TEST_STATE].throttle, 50, 110)
     love.graphics.print("fuel " .. STATES[TEST_STATE].fuel, 50, 130)
     love.graphics.print("starter " .. STATES[TEST_STATE].starter, 50, 150)
     love.graphics.setColor(stateColors.itt)
-    love.graphics.print("ITT    " .. engine.temp.itt, 50, 250)
+    love.graphics.print("ITT    " .. engine.temp.itt, 50, 180)
     love.graphics.setColor(stateColors.ng)
-    love.graphics.print("ng    " .. engine.ng, 50, 270)
-    love.graphics.print("state  " .. engine.states[engine.currentState].name, 50, 290)
+    love.graphics.print("ng    " .. engine.ng, 50, 210)
+    love.graphics.print("state  " .. engine.states[engine.currentState].name, 50, 230)
+    love.graphics.print("IELU  " .. engine.ieluIntervent, 50, 250)
 end
 
 loaded = false
 
-function love.update(dt)
-    if secondElapsed > 25*secondDivider then return end
+function love.update()
+    if secondElapsed > 25 * secondDivider then
+        return
+    end
     secondElapsed = secondElapsed + 1
 
     engine.update(STATES[TEST_STATE])
 
-    if (secondElapsed > 1*secondDivider) then
+    if (secondElapsed > 1 * secondDivider) then
         TEST_STATE = 2
     end
-    if (secondElapsed > 2*secondDivider) then
+    if (secondElapsed > 2 * secondDivider) then
         TEST_STATE = 3
     end
     graph[secondElapsed] = {

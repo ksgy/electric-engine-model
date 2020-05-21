@@ -6,7 +6,7 @@ local GRAPH_TYPES = {
 	PARAB = 3
 }
 local ITT_COOL_STEP = 0.0045
-local ITT_TEMP_THRESHOLD = 0.1
+--local ITT_TEMP_THRESHOLD = 0.1
 local ITT_MAX_TEMP = 750
 
 local IAS_COOLING_FACTOR = 0.0045
@@ -75,7 +75,11 @@ local engine = {
 	},
 	ng = 0,
 	burningFuel = 0,
+	ieluIntervent = 0,
 }
+
+randomITTOvershootCounter = 15
+max = 10
 
 engine.init = function(datarefs)
 	engine.temp.itt = datarefs.oat
@@ -175,6 +179,25 @@ engine.update = function(datarefs)
 			engine.temp.itt = engine.temp.itt + (ittTempDiff * engine.states[engine.currentState].ITT_HEAT_STEP)
 		else
 			engine.temp.itt = engine.temp.itt + (engine.states[engine.currentState].ITT_HEAT_STEP * engine.states[engine.currentState].rate * 100) -- linear
+		end
+
+		-- add random overshoots
+		if engine.currentState < 6 and engine.currentState > 2 then
+			if randomITTOvershootCounter >= max then
+				direction = (1 + math.random()) * -1
+			end
+			if randomITTOvershootCounter <= max * -1 then
+				direction = (1 + math.random()) * 2
+				max = math.random(0, 11)
+			end
+			randomITTOvershootCounter = randomITTOvershootCounter + direction
+
+			engine.ieluIntervent = 0
+
+			if max > 8 then
+				engine.ieluIntervent = 1 -- TODO better IELU intervent
+				engine.temp.itt = engine.temp.itt + randomITTOvershootCounter / 7
+			end
 		end
 	else
 		-- cooling

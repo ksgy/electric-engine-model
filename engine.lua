@@ -192,12 +192,13 @@ engine.update = function(datarefs)
 			end
 			randomITTOvershootCounter = randomITTOvershootCounter + direction
 
-			engine.ieluIntervent = 0
-
 			if max > 8 then
 				engine.ieluIntervent = 1 -- TODO better IELU intervent
 				engine.temp.itt = engine.temp.itt + randomITTOvershootCounter / 7
 			end
+		end
+		if engine.currentState >= 6 then
+			engine.ieluIntervent = 0
 		end
 	else
 		-- cooling
